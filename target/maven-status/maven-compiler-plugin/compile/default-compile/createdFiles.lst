@@ -1,0 +1,10 @@
+com\songaerospace\NewDeckDTO.class
+com\songaerospace\CardDTO.class
+com\songaerospace\Requestor.class
+com\songaerospace\NewDrawCardDTO.class
+com\songaerospace\DrawnCardDTO.class
+com\songaerospace\Card.class
+com\songaerospace\CardGame.class
+com\songaerospace\CardPileDTO.class
+com\songaerospace\Deck.class
+com\songaerospace\Pile.class

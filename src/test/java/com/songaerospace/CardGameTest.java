@@ -3,7 +3,7 @@ package com.songaerospace;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
-class ApplicationTest {
+class CardGameTest {
     @Test
     public void simple_test()
     {

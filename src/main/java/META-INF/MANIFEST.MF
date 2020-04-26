@@ -1,3 +1,3 @@
 Manifest-Version: 1.0
-Main-Class: com.songaerospace.Application
+Main-Class: com.songaerospace.CardGame
 

@@ -1,9 +1,11 @@
 package com.songaerospace;
 
-public class Application {
+public class CardGame {
     public static void main(String[] args)
     {
-//        test_deck();
+        System.out.println("Testing card deck");
+        test_deck();
+        System.out.println("\nTesting card pile");
         test_pile();
     }
 
