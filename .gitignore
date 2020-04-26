@@ -14,7 +14,7 @@
 .mtj.tmp/
 
 # Package Files #
-!CarGame.jar
+!CardGame.jar
 *.jar
 *.war
 *.nar

@@ -65,33 +65,29 @@ The project is developed with JDK 11 and built with Maven 3.6.3.  Make sure both
 
 1.  Start a command line console.  At the project root; *pom.xml* and *README.md* should be available; compile the project
 
-
-    $ mvn compile
-
+    `$ mvn compile`
 or
-
-    $ mvn compile -X
+    `$ mvn compile -X`
 
 to show the full debug output
 
 2.  After compile is successful, build the project
 
-
-    $ mvn package
-
+    `$ mvn package`
 or
-
-    $ mvn package -X
+    `$ mvn package -X`
 
 to show the full debug output
 
 3.  After buiding is successful, the executable file should be avialble in the target folder; e.g.
 
-
-    \target\CarGame-1.0.jar
+    `\target\CarGame-1.0.jar`
 
 4.  The executable file can be run with the command
 
+    `$ java -jar \target\CarGame-1.0.jar`
 
-    $ java -jar \target\CarGame-1.0.jar
+5.  Test cases can be run with the command
+
+    `$ mvn test`
 

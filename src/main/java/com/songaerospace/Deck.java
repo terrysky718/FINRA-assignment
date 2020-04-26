@@ -11,15 +11,6 @@ public class Deck {
     private boolean with_jokers;
     private Requestor deck_requestor;
 
-//    private final List<String> suit_list = Arrays.asList("Spades", "Hearts", "Clubs", "Diamonds");
-//    private final List<String> colour_list = Arrays.asList("Red", "Black");
-//    private final Map<Integer, String> value_list = Map.ofEntries(
-//            entry(1, "Ace"),
-//            entry(11, "Jack"),
-//            entry(12, "Queen"),
-//            entry(13, "King")
-//    );
-
     // Default constructor
     public Deck() {
         this.deck_requestor = new Requestor();
@@ -65,44 +56,51 @@ public class Deck {
         }
     }
 
-    public Card draw_card() throws Exception
+    public Card draw_card()
     {
         // Draw a card from current deck
         // Return a Card object
         String api_url = this.deck_requestor.getApiUrl();
         api_url = api_url + this.deck_id + "/draw/?count=1";
         Card drawn_card = new Card();
-        var response = this.deck_requestor.GetRequest(api_url);
-        DrawnCardDTO new_card = new Gson().fromJson((String) response.body(), DrawnCardDTO.class);
-        if (!new_card.success)
-        {
-            throw new Exception("Failed to complete request with " + api_url);
+        try {
+            var response = this.deck_requestor.GetRequest(api_url);
+            DrawnCardDTO new_card = new Gson().fromJson((String) response.body(), DrawnCardDTO.class);
+            if (!new_card.success)
+            {
+                throw new Exception("Failed to complete request with " + api_url);
+            }
+            drawn_card.setValue(new_card.cards.get(0).value);
+            drawn_card.setSuit(new_card.cards.get(0).suit);
+            String c_code = new_card.cards.get(0).code;
+            drawn_card.setCode(c_code);
+            if (c_code.contains("X"))
+            {
+                drawn_card.setIs_joker(true);
+            }
+            else
+            {
+                drawn_card.setIs_joker(false);
+            }
+            // update class variable
+            this.num_cards = new_card.remaining;
+        } catch (Exception error) {
+            error.printStackTrace();
         }
-        drawn_card.setValue(new_card.cards.get(0).value);
-        drawn_card.setSuit(new_card.cards.get(0).suit);
-        String c_code = new_card.cards.get(0).code;
-        drawn_card.setCode(c_code);
-        if (c_code.contains("X"))
-        {
-            drawn_card.setIs_joker(true);
-        }
-        else
-        {
-            drawn_card.setIs_joker(false);
-        }
-        // update class variable
-        this.num_cards = new_card.remaining;
-
         return drawn_card;
     }
 
-    public void reshuffle() throws Exception
+    public void reshuffle()
     {
         // Shuffle the current deck
         String api_url = this.deck_requestor.getApiUrl();
         api_url = api_url + this.deck_id + "/shuffle/";
-        NewDeckDTO new_deck = this.send_request(api_url);
-        this.shuffled = new_deck.shuffled;
+        try {
+            NewDeckDTO new_deck = this.send_request(api_url);
+            this.shuffled = new_deck.shuffled;
+        } catch (Exception error) {
+            error.printStackTrace();
+        }
     }
 
     public void open_new_jokers()

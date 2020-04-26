@@ -34,51 +34,55 @@ public class Pile {
         this.pile_requestor = new Requestor();
     }
 
-    public void add_card(Card discarded_card) throws Exception
+    public void add_card(Card discarded_card)
     {
         // Add a card to a pile
         String deck_id = this.card_deck.getDeckId();
         String api_url = this.pile_requestor.getApiUrl() + deck_id + "/pile/" + this.name + "/add/?cards=";
         api_url = api_url + discarded_card.getCode();
 
-        var response = this.pile_requestor.GetRequest(api_url);
-        CardPileDTO add_to_pile = new Gson().fromJson((String) response.body(), CardPileDTO.class);
-        if (!add_to_pile.success)
-        {
-            throw new Exception("Failed to add card " + discarded_card.getCode() + " to pile.");
-        }
-        // check returned values
-        if (!deck_id.equals(add_to_pile.deck_id))
-        {
-            // returned deck ID
-            throw new Exception("Deck ID mismatched; sent=" + deck_id + "; returned=" + add_to_pile.deck_id);
-        }
-        if (!this.card_deck.getNumCards().equals(add_to_pile.remaining))
-        {
-            // returned remaining cards
-            throw new Exception("Deck cards mismatched; remaining=" + this.card_deck.getNumCards() + "; returned=" + add_to_pile.remaining);
-        }
-        // check returned pile
-        JsonObject res_obj = new Gson().fromJson(response.body().toString(), JsonObject.class);
-        var piles_obj = res_obj.get("piles");
-        var piles_key = ((JsonObject) piles_obj)
-                .entrySet()
-                .stream()
-                .map(i -> i.getKey())
-                .collect(Collectors.toCollection(ArrayList::new));
-        // check returned pile name
-        if (!this.name.equals(piles_key.get(0)))
-        {
-            // returned pile name
-            throw new Exception("Pile names mismatched; name=" + this.name + "; returned=" + piles_key.get(0));
-        }
-        this.card_pile.add(discarded_card);
-        this.remaining = this.card_pile.size();
+        try {
+            var response = this.pile_requestor.GetRequest(api_url);
+            CardPileDTO add_to_pile = new Gson().fromJson((String) response.body(), CardPileDTO.class);
+            if (!add_to_pile.success)
+            {
+                throw new Exception("Failed to add card " + discarded_card.getCode() + " to pile.");
+            }
+            // check returned values
+            if (!deck_id.equals(add_to_pile.deck_id))
+            {
+                // returned deck ID
+                throw new Exception("Deck ID mismatched; sent=" + deck_id + "; returned=" + add_to_pile.deck_id);
+            }
+            if (!this.card_deck.getNumCards().equals(add_to_pile.remaining))
+            {
+                // returned remaining cards
+                throw new Exception("Deck cards mismatched; remaining=" + this.card_deck.getNumCards() + "; returned=" + add_to_pile.remaining);
+            }
+            // check returned pile
+            JsonObject res_obj = new Gson().fromJson(response.body().toString(), JsonObject.class);
+            var piles_obj = res_obj.get("piles");
+            var piles_key = ((JsonObject) piles_obj)
+                    .entrySet()
+                    .stream()
+                    .map(i -> i.getKey())
+                    .collect(Collectors.toCollection(ArrayList::new));
+            // check returned pile name
+            if (!this.name.equals(piles_key.get(0)))
+            {
+                // returned pile name
+                throw new Exception("Pile names mismatched; name=" + this.name + "; returned=" + piles_key.get(0));
+            }
+            this.card_pile.add(discarded_card);
+            this.remaining = this.card_pile.size();
 
-        Integer return_remain = ((JsonObject) ((JsonObject) piles_obj).get(this.name)).get("remaining").getAsInt();
-        if (!return_remain.equals(this.remaining))
-        {
-            throw new Exception("Pile cards mismatch; remaining=" + this.remaining + "; returned=" + return_remain);
+            Integer return_remain = ((JsonObject) ((JsonObject) piles_obj).get(this.name)).get("remaining").getAsInt();
+            if (!return_remain.equals(this.remaining))
+            {
+                throw new Exception("Pile cards mismatch; remaining=" + this.remaining + "; returned=" + return_remain);
+            }
+        } catch (Exception error) {
+            error.printStackTrace();
         }
     }
 
